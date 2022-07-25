@@ -1,0 +1,75 @@
+#!/bin/bash
+
+set -eou pipefail
+
+
+readonly SEED=2363
+
+readonly TRAIN_TSV="data/TestData/kataEng_T_train.tsv"
+
+readonly RANDOM_STARTS=25
+
+readonly MODEL_SIZE="${MODEL_SIZE:-1000000}"
+
+readonly FAR_PATH="models/kataEng.far"
+
+readonly ENCODER_PATH="models/kataEng.enc"
+
+readonly FST_PATH="models/kataEng.fst"
+
+readonly ORDER="${ORDER:-8}"
+
+readonly PRUNING_METHOD="${PRUNING_METHOD:-relative_entropy}"
+
+readonly SMOOTHING_METHOD="${SMOOTHING_METHOD:-kneser_ney}"
+
+readonly INPUT_PATH="data/TestData/kataEng_T_test.tsv"
+
+readonly OUTPUT_PATH="results/kataEng_T_test.txt"
+
+readonly EVAL_PATH="results/EvalRes.txt"
+
+
+./align.py \
+        --seed="${SEED}" \
+        --random_starts="${RANDOM_STARTS}" \
+        --tsv_path="${TRAIN_TSV}" \
+        --encoder_path="models/kataEng.enc" \
+        --far_path="models/kataEng.far"
+
+
+model() {
+    ngramcount --require_symbols=false --order="${ORDER}" "${FAR_PATH}" | \
+        ngrammake --method="${SMOOTHING_METHOD}" - | \
+        ngramshrink \
+            --method="${PRUNING_METHOD}" \
+            --target_number_of_ngrams="${MODEL_SIZE}" \
+            - | \
+        fstencode --decode - ${ENCODER_PATH} "${FST_PATH}"
+}
+
+model
+
+
+predict() {
+    local -r WORDS_PATH="$(mktemp -u -t words.XXXXXX.$$.txt)"
+    cut -f1 "${INPUT_PATH}" > "${WORDS_PATH}"
+    ./predict.py                                   \
+        --fst_path="${FST_PATH}"                   \
+        --word_path="${WORDS_PATH}"                \
+        > "${OUTPUT_PATH}"
+    rm -f "${WORDS_PATH}"
+}
+
+predict
+
+
+eval() {
+    
+    ./test.py                                        \
+        --gold_path="${INPUT_PATH}"                  \
+        --hypo_path="${OUTPUT_PATH}"                 \
+        > "${EVAL_PATH}"
+}
+
+eval
