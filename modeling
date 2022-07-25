@@ -23,12 +23,6 @@ readonly PRUNING_METHOD="${PRUNING_METHOD:-relative_entropy}"
 
 readonly SMOOTHING_METHOD="${SMOOTHING_METHOD:-kneser_ney}"
 
-readonly INPUT_PATH="data/TestData/kataEng_T_test.tsv"
-
-readonly OUTPUT_PATH="results/kataEng_T_test.txt"
-
-readonly EVAL_PATH="results/EvalRes.txt"
-
 
 ./align.py \
         --seed="${SEED}" \
@@ -49,27 +43,3 @@ model() {
 }
 
 model
-
-
-predict() {
-    local -r WORDS_PATH="$(mktemp -u -t words.XXXXXX.$$.txt)"
-    cut -f1 "${INPUT_PATH}" > "${WORDS_PATH}"
-    ./predict.py                                   \
-        --fst_path="${FST_PATH}"                   \
-        --word_path="${WORDS_PATH}"                \
-        > "${OUTPUT_PATH}"
-    rm -f "${WORDS_PATH}"
-}
-
-predict
-
-
-eval() {
-    
-    ./test.py                                        \
-        --gold_path="${INPUT_PATH}"                  \
-        --hypo_path="${OUTPUT_PATH}"                 \
-        > "${EVAL_PATH}"
-}
-
-eval

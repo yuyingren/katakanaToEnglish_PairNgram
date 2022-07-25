@@ -21,6 +21,17 @@ The project contains:
     The pair N-gram model is imported from the the SIGMORPHON2020 task1 project.
     The parameters are set up for this project.
 
-* A prediction model which is based on the prediction model in [SIGMORPHON2020 task1](https://github.com/sigmorphon/2020/tree/master/task1) project, and modified with an English lexicon filter.
+* A prediction module which is based on the prediction model in [SIGMORPHON2020 task1](https://github.com/sigmorphon/2020/tree/master/task1) project, and modified with an English lexicon filter.
 
-* A Evaluation model which calculates and returns the WER(word error rate) and CER(character error rate) as the measure of hte model's performance.
+* A Evaluation module which calculates and returns the WER(word error rate) and CER(character error rate) as the measure of hte model's performance.
+
+>
+Before running any program in this project, please set up the environment with this command:
+
+>>conda env create -f environment.yml
+
+and activate this environment with:
+
+>>conda activate katakanaEngTrans
+
+You can either run all programs at once by execute [RunatOnce] or run each of them by calling [modelling], [prediction], and [evaluation] seperately. 
