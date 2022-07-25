@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-"""Rewrites FST examples.
+"""
 
-This script assumes the input is provided one example per line."""
+This script is based on the prediction module from SIGMORPHON 2020 task1 by @kylegorman and 
+Added an English lexicon filtering function to the original."""
 
-__author__ = "Kyle Gorman"
+
 
 import argparse
 import functools

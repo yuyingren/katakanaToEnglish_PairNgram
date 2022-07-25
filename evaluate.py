@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jul 25 10:20:25 2022
+The script of edit_distance function and score function are imported from the evaluation module of SIGMORPHON2020 task1 project by @kylegorman.
+
+The main function will read the file of gold data and the file of predicted words and calculate the WER and CER using edit_distance and
+score.
 
 @author: yuyingren
 """
@@ -82,7 +85,6 @@ def main(args: argparse.Namespace):
 if __name__ == "__main__":
     logging.basicConfig(level="INFO", format="%(levelname)s: %(message)s")
     parser = argparse.ArgumentParser(description="Evaluates sequence model")
-    parser.add_argument("--gold_path", help="path to gold TSV file")
-    parser.add_argument("--hypo_path", help="path to hypo TXT file")
-
-    main(parser.parse_args())
+    parser.add_argument("gold_path", help="path to gold TSV file")
+    parser.add_argument("hypo_path", help="path to hypo TXT file")
+    main(parser.parse_args(args))
